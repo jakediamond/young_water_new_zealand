@@ -4,6 +4,13 @@
 # Date: 2023-03-01
 # -------------------------------------
 
+# ################## How to Use this file ##################################
+# Step 1: Install the "targets" package, a library to ensure reproducibility
+# Step 2: Load the "targets" library
+# To run: type "tar_make()" in the console and hit enter
+# You can also type "tar_visnetwork()" and run it to see how all the functions
+# and data are linked to eachother
+
 # Created by use_targets().
 # Follow the manual to check and run the pipeline:
 # https://books.ropensci.org/targets/walkthrough.html#inspect-the-pipeline
@@ -13,6 +20,7 @@ library(targets)
 library(tarchetypes)
 library(here)
 
+# Load packages and set up  -----------------------------------------------
 # Set target options:
 tar_option_set(
   # packages that your targets need to run
@@ -26,6 +34,9 @@ tar_option_set(
 # Run the R scripts in the R/ folder with your custom functions:
 source("src/R/functions.R") # Source other scripts as needed.
 
+
+# List of targets to run--------------------------------------------------
+# Do not change unless you know what you're doing!!!
 # Replace the target list below with your own:
 list(
   # Load raw isotope and discharge data for rivers
@@ -33,9 +44,7 @@ list(
   # Clean it to be in easy-to-use format
   tar_target(data_iso, clean_raw_fun(data_raw)),
   # load results of previous analysis, inlcuding sine fits to precip data
-  tar_target(data_amp, load_Rdata(here("results",
-                                       "sinusoidal model for river sites",
-                                       "output",
+  tar_target(data_amp, load_Rdata(here("data",
                                        "river.site.est.Amplitude.Rdata"))),
   # Clean that data to be in easy-to-use format
   tar_target(amp_old, clean_fun_results(data_amp)),
@@ -47,3 +56,5 @@ list(
   # Estimate uncertainty with monte carlo approach, 10000 runs
   tar_target(Fwy_MC, monte_carlo_fun(Fwy))
 )
+
+# To run: type "tar_make()" in the console and hit enter
